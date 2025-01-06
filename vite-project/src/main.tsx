@@ -18,7 +18,7 @@ class MyWebComponent extends HTMLElement {
     ReactDOM.createRoot(root).render(
       <>
         <head>
-          <style id="css" />
+          <link rel="stylesheet" href="./build.css" />
         </head>
 
         <React.StrictMode>
