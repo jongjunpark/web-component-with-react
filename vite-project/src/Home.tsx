@@ -16,6 +16,7 @@ const Home: React.FC = () => {
           Tag
         </Tag>
       </div>
+      <slot name="my-slot"></slot>
     </div>
   );
 };

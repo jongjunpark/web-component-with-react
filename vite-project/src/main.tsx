@@ -1,9 +1,15 @@
 import ReactDOM from "react-dom/client";
 import React from "react";
-import App from "./App";
 import { Provider } from "./Provider";
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
+import { Nested } from "./Nested";
+import App from "./App";
+import Home from "./Home";
+
+export const normalizeAttribute = (attribute: string) => {
+  return attribute.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+};
 
 class MyWebComponent extends HTMLElement {
   connectedCallback() {
@@ -17,9 +23,7 @@ class MyWebComponent extends HTMLElement {
 
     ReactDOM.createRoot(root).render(
       <>
-        <head>
-          <link rel="stylesheet" href="./build.css" />
-        </head>
+        <link rel="stylesheet" href="./build.css" />
 
         <React.StrictMode>
           <CacheProvider value={cache}>
@@ -33,6 +37,41 @@ class MyWebComponent extends HTMLElement {
   }
 }
 
-customElements.define("my-web-component", MyWebComponent);
+class HomeComponent extends HTMLElement {
+  constructor() {
+    super();
 
-// ReactDOM.createRoot(document.getElementById("root")!).render(<App />);
+    const supportsDeclarative = Object.prototype.hasOwnProperty.call(
+      HTMLElement.prototype,
+      "attachInternals"
+    );
+    const internals = supportsDeclarative ? this.attachInternals() : undefined;
+
+    // check for a Declarative Shadow Root.
+    let shadow = internals?.shadowRoot;
+
+    if (!shadow) {
+      // there wasn't one. create a new Shadow Root:
+      shadow = this.attachShadow({
+        mode: "open",
+      });
+    }
+
+    ReactDOM.createRoot(shadow).render(<Home />);
+  }
+}
+
+class NestedComponent extends HTMLElement {
+  connectedCallback() {
+    const root = document.createElement("div");
+    this.attachShadow({ mode: "open" }).appendChild(root);
+
+    ReactDOM.createRoot(root).render(<Nested />);
+  }
+}
+
+customElements.define("my-web-component", MyWebComponent);
+customElements.define("home-component", HomeComponent);
+customElements.define("nested-component", NestedComponent);
+
+ReactDOM.createRoot(document.getElementById("root")!).render(<App />);
