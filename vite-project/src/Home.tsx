@@ -1,14 +1,23 @@
+"use client";
+
 import { Tag } from "@imwebme/clay-experimental";
 import { CheckCircleFilled } from "@imwebme/clay-icons";
 import React from "react";
-import { Link } from "react-router-dom";
 
 const Home: React.FC = () => {
+  const [value] = React.useState("hello");
   return (
     <div>
-      <h1>Home Page</h1>
+      <meta
+        name="keywords"
+        content="React, JavaScript, semantic markup, html"
+      />
+      <meta name="title" content="hello" />
+      <meta name="description" content="hello" />
+      <meta name="og:title" content="hello" />
+      <meta name="og:description" content="hello" />
+      <h1>Home Page {value}</h1>
       <div>
-        <Link to="/notice">Notice로 가기</Link>
         <Tag
           variant="success"
           trailingIcon={<CheckCircleFilled colorToken="icon-critical" />}
